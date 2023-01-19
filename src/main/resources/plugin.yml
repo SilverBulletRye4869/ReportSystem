@@ -1,0 +1,8 @@
+name: ReportSystem
+version: '${project.version}'
+main: silverassist.reportsystem.ReportSystem
+api-version: 1.17
+
+commands:
+  report:
+    usage: /report ...
