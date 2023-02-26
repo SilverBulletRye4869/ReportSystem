@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import silverassist.reportsystem.reportSystem.InputByChat;
 import silverassist.reportsystem.reportSystem.MainSystem;
 
 
@@ -37,7 +38,8 @@ public class Command implements CommandExecutor {
             return false;
         }
         Player p = (Player)sender;
-        boolean result = MAIN_SYSTEM.report(p,args[0],args);
+        if(InputByChat.isReporting.test(p))return true;
+        boolean result = MAIN_SYSTEM.report(p,args);
         if(!result)Util.sendPrefixMessage(p,"§cレポートの送信に失敗しました。レポートタイプ等があっているかを再度確認し実行してください");
 
         return true;
