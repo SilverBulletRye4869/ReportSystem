@@ -20,28 +20,22 @@ public class MainSystem {
     private final Discord DISCORD;
     private final Map<String, Color> color = Map.of("bug",Color.RED,"violation",Color.YELLOW,"else",Color.GREEN);
 
-    private final InputByChat CHAT_INPUT_SYSTEM;
-
 
     public MainSystem(JavaPlugin plugin, Discord discord){
         this.plugin = plugin;
         this.DISCORD =discord;
-        this.CHAT_INPUT_SYSTEM = new InputByChat(plugin,this);
     }
 
-    public boolean report(Player p,String type,String[] args){
-        if(!REPORT_TYPE.contains(type))return false;
+    public boolean report(Player p,String[] args){
+        if(args.length<3 || !REPORT_TYPE.contains(args[0]))return false;
         EmbedBuilder eb = new EmbedBuilder();
         eb.setThumbnail("https://minotar.net/avatar/"+p.getUniqueId());
-        eb.setColor(color.get(type));
+        eb.setColor(color.get(args[0]));
         StringJoiner sj = new StringJoiner("\n");
         for(int i = 2;i<args.length;i++)sj.add(args[i]);
         eb.addField(args[1],sj.toString(),false);
         eb.setFooter("sended by "+p.getName()+" ("+p.getUniqueId()+")");
-        DISCORD.getChanelByName(type).sendMessage(eb.build()).queue();
+        DISCORD.getChanelByName(args[0]).sendMessage(eb.build()).queue();
         return true;
     }
-
-
-    public InputByChat getChatInputSystem(){return CHAT_INPUT_SYSTEM;}
 }
