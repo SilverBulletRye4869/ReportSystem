@@ -6,6 +6,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -14,6 +15,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
@@ -125,5 +127,14 @@ public class Util {
 
     public static void delayInvOpen(Player p,Inventory inv){
         Bukkit.getScheduler().runTaskLater(plugin,()->p.openInventory(inv),1);
+    }
+
+    public static ItemStack getHead(Player p){return getHead((OfflinePlayer) p);}
+    public static ItemStack getHead(OfflinePlayer p){
+        return new ItemStack(Material.PLAYER_HEAD){{
+            SkullMeta head = (SkullMeta) this.getItemMeta();
+            head.setOwningPlayer(p);
+            this.setItemMeta(head);
+        }};
     }
 }
