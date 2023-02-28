@@ -29,6 +29,7 @@ public class ReasonChoice {
         this.MAIN_SYSTEM = mainSystem;
         this.P = p;
         this.TARGET = target;
+        p.closeInventory();
         plugin.getServer().getPluginManager().registerEvents(new listener(),plugin);
     }
 
@@ -43,17 +44,19 @@ public class ReasonChoice {
         inv.setItem(6,Util.createItem(Material.COMPARATOR,"§c§lマクロ･自動化"));
         inv.setItem(7,Util.createItem(Material.GUNPOWDER,"§c§lバグの悪用"));
         inv.setItem(8, Util.createItem(Material.NAME_TAG,"§6§lカスタム理由",List.of("§e詳細理由の入力が可能です")));
-        P.openInventory(inv);
+        Util.delayInvOpen(P,inv);
     }
 
     private class listener implements Listener {
         @EventHandler
         public void onInventoryClick(InventoryClickEvent e){
             if(!e.getWhoClicked().equals(P) || e.getCurrentItem() == null || !e.getClickedInventory().getType().equals(InventoryType.CHEST))return;
+            e.setCancelled(true);
             int slot = e.getSlot();
             String name = e.getCurrentItem().getItemMeta().getDisplayName();
+            P.closeInventory();
             if(slot==8)new InputByChat(plugin,MAIN_SYSTEM,P,"violation");
-            else MAIN_SYSTEM.report(P,new String[]{"violation",name.substring(3),"違反者: "+TARGET.getName(),"違反者座標: "+TARGET.getLocation()});
+            else MAIN_SYSTEM.report(P,new String[]{"violation",name.substring(4),"違反者: "+TARGET.getName()+"("+TARGET.getUniqueId()+")","違反者座標: "+TARGET.getLocation()});
         }
 
         @EventHandler
