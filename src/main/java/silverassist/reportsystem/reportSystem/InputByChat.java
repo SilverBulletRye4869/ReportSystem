@@ -10,7 +10,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import silverassist.reportsystem.Util;
 import silverassist.reportsystem.reportSystem.menu.ConfirmMenu;
-import silverassist.reportsystem.reportSystem.menu.TypeChoice;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -53,7 +52,7 @@ public class InputByChat implements Listener {
             Util.sendPrefixMessage(P,"§c§lキャンセルしました");
             return;
         }
-        String[] msgs = e.getMessage().split(" ");
+        String[] msgs = (REPORT_TYPE+" "+e.getMessage()).split(" ");
         if(msgs.length < 2 || msgs[0].length() == 0){
             Util.sendPrefixMessage(P,"§c§l件名と本文を正しく入力してください");
             return;
