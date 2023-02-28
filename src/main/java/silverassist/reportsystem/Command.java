@@ -32,13 +32,19 @@ public class Command implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] args){
-        if(args.length <3)return true;
         if(!(sender instanceof Player)){
             sender.sendMessage("プレイヤーのみ実行可能です");
             return false;
         }
+
         Player p = (Player)sender;
+
         if(InputByChat.isReporting.test(p))return true;
+        if(args.length <3){
+            MAIN_SYSTEM.getHomeMenu().open(p);
+            return true;
+        };
+
         boolean result = MAIN_SYSTEM.report(p,args);
         if(!result)Util.sendPrefixMessage(p,"§cレポートの送信に失敗しました。レポートタイプ等があっているかを再度確認し実行してください");
 
