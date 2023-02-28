@@ -41,13 +41,13 @@ public class ConfirmMenu {
         Inventory inv = Bukkit.createInventory(P,27, Util.PREFIX+"§d§lレポート最終確認");
         Util.invFill(inv);
         for(int i = 10;i<12;i++)inv.setItem(i,CANCEL_BG);
-        for(int i = 15;i<17;i++)inv.setItem(i,CANCEL_BG);
+        for(int i = 15;i<17;i++)inv.setItem(i,CONFIRM_BG);
         List<String> mainTxt = Arrays.asList(Arrays.copyOfRange(REPORT_MESSAGES,2,REPORT_MESSAGES.length)).stream()
                 .map(e -> "§r§f"+e)
                 .collect(Collectors.toList());
         inv.setItem(13,Util.createItem(Material.PAPER,"§e§l件名: §f§l"+REPORT_MESSAGES[1],mainTxt));
 
-        P.openInventory(inv);
+        Util.delayInvOpen(P,inv);
     }
 
 
@@ -61,7 +61,10 @@ public class ConfirmMenu {
             e.setCancelled(true);
             int slot = e.getSlot();
 
-            if(slot>9 && slot<12)P.closeInventory();
+            if(slot>9 && slot<12){
+                P.closeInventory();
+                Util.sendPrefixMessage(P,"§c§lキャンセルしました。");
+            }
             else if(slot>14&&slot<17){
                 boolean result = MAIN_SYSTEM.report(P,REPORT_MESSAGES);
                 if(result)Util.sendPrefixMessage(P,"§a§lレポートの送信に成功しました。");
