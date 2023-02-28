@@ -13,6 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import silverassist.reportsystem.Util;
 import silverassist.reportsystem.reportSystem.InputByChat;
 import silverassist.reportsystem.reportSystem.MainSystem;
+import silverassist.reportsystem.reportSystem.menu.violation.PlayerChoice;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -31,9 +32,10 @@ public class TypeChoice {
     public void open(Player p){
         Inventory inv = Bukkit.createInventory(p,9, Util.PREFIX+"§d§lレポートタイプ選択");
         Util.invFill(inv);
-        inv.setItem(1,Util.createItem(Material.RED_STAINED_GLASS_PANE,"§c§lバグ報告"));
-        inv.setItem(1,Util.createItem(Material.YELLOW_STAINED_GLASS_PANE,"§c§l違反報告"));
-        inv.setItem(1,Util.createItem(Material.LIME_STAINED_GLASS_PANE,"§c§lその他"));
+        for(int i = 0;i<3;i++)inv.setItem(i,Util.createItem(Material.RED_STAINED_GLASS_PANE,"§c§lバグ報告"));
+        for(int i = 3;i<6;i++)inv.setItem(i,Util.createItem(Material.YELLOW_STAINED_GLASS_PANE,"§c§l違反報告"));
+        for(int i = 6;i<9;i++)inv.setItem(i,Util.createItem(Material.LIME_STAINED_GLASS_PANE,"§c§lその他"));
+        p.closeInventory();
         openingThis.add(p);
         Util.delayInvOpen(p,inv);
     }
@@ -43,15 +45,16 @@ public class TypeChoice {
         public void onInventoryClick(InventoryClickEvent e){
             Player p = (Player) e.getWhoClicked();
             if(!openingThis.contains(p) || e.getCurrentItem() ==null || !e.getInventory().getType().equals(InventoryType.CHEST))return;
-            switch (e.getSlot()){
-                case 1:
+            e.setCancelled(true);
+            switch (e.getSlot()/ 3){
+                case 0:
                     new InputByChat(plugin,MAIN_SYSTEM,p,"bug");
                     break;
-                case 5:
-
+                case 1:
+                    new PlayerChoice(plugin,MAIN_SYSTEM,p).open();
                     break;
 
-                case 9:
+                case 2:
                     new InputByChat(plugin,MAIN_SYSTEM,p,"else");
                     break;
             }
