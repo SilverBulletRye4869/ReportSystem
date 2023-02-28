@@ -30,8 +30,9 @@ public class PlayerChoice {
         this.plugin = plugin;
         this.MAIN_SYSTEM = mainSystem;
         this.P = p;
+        p.closeInventory();
         plugin.getServer().getPluginManager().registerEvents(new listener(),plugin);
-        PLAYERS = (Player[])Bukkit.getOnlinePlayers().stream()/*.filter(g->!g.equals(P))*/.collect(Collectors.toList()).toArray();
+        PLAYERS = Bukkit.getOnlinePlayers().stream()/*.filter(g->!g.equals(P))*/.collect(Collectors.toList()).toArray(new Player[Bukkit.getOnlinePlayers().size()]);
     }
 
     public void open(){open(0);}
@@ -39,11 +40,12 @@ public class PlayerChoice {
         this.page = page;
         Inventory inv = Bukkit.createInventory(P,54, Util.PREFIX+"§d§lプレイヤーを選択してください。");
         for(int i = 45*page;i<Math.min(45*(page+1),PLAYERS.length);i++)inv.setItem(i%45,Util.getHead(PLAYERS[i]));
-        for(int i = 46;i<54;i++)inv.setItem(i,Util.GUI_BG);
-        if(page>0)inv.setItem(46,Util.createItem(Material.RED_STAINED_GLASS_PANE,"§c§l前へ"));
-        if(page < (PLAYERS.length-1)/45)inv.setItem(46,Util.createItem(Material.RED_STAINED_GLASS_PANE,"§a§l次へ"));
-        P.openInventory(inv);
+        for(int i = 45;i<54;i++)inv.setItem(i,Util.GUI_BG);
+        if(page>0)inv.setItem(45,Util.createItem(Material.RED_STAINED_GLASS_PANE,"§c§l前へ"));
+        if(page < (PLAYERS.length-1)/45)inv.setItem(53,Util.createItem(Material.LIME_STAINED_GLASS_PANE,"§a§l次へ"));
         unregisterCancel = false;
+        Util.delayInvOpen(P,inv);
+
     }
 
     private boolean unregisterCancel = false;
@@ -63,6 +65,7 @@ public class PlayerChoice {
                     open(--page);
                     break;
                 case LIME_STAINED_GLASS_PANE:
+                    unregisterCancel = true;
                     open(++page);
                     break;
             }
@@ -71,7 +74,7 @@ public class PlayerChoice {
 
         @EventHandler
         public void onInventoryClose(InventoryCloseEvent e){
-            if(!e.getPlayer().equals(P) || !unregisterCancel)return;
+            if(!e.getPlayer().equals(P) || unregisterCancel)return;
             HandlerList.unregisterAll(this);
         }
     }
