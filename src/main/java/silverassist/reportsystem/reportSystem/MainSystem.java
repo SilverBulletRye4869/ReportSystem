@@ -1,13 +1,12 @@
 package silverassist.reportsystem.reportSystem;
 
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.TextChannel;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import silverassist.reportsystem.Discord;
+import silverassist.reportsystem.reportSystem.menu.TypeChoice;
 
 import java.awt.*;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringJoiner;
@@ -18,12 +17,14 @@ public class MainSystem {
 
     private final JavaPlugin plugin;
     private final Discord DISCORD;
+    private final TypeChoice HOME_MENU;
     private final Map<String, Color> color = Map.of("bug",Color.RED,"violation",Color.YELLOW,"else",Color.GREEN);
 
 
     public MainSystem(JavaPlugin plugin, Discord discord){
         this.plugin = plugin;
         this.DISCORD =discord;
+        this.HOME_MENU = new TypeChoice(plugin,this);
     }
 
     public boolean report(Player p,String[] args){
@@ -38,4 +39,6 @@ public class MainSystem {
         DISCORD.getChanelByName(args[0]).sendMessage(eb.build()).queue();
         return true;
     }
+
+    public TypeChoice getHomeMenu(){return HOME_MENU;}
 }
