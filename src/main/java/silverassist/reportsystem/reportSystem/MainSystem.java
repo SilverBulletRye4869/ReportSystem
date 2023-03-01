@@ -1,9 +1,11 @@
 package silverassist.reportsystem.reportSystem;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import silverassist.reportsystem.Discord;
+import silverassist.reportsystem.ReportSystem;
 import silverassist.reportsystem.reportSystem.menu.TypeChoice;
 
 import java.awt.*;
@@ -36,7 +38,12 @@ public class MainSystem {
         for(int i = 2;i<args.length;i++)sj.add(args[i]);
         eb.addField(args[1],sj.toString(),false);
         eb.setFooter("sended by "+p.getName()+" ("+p.getUniqueId()+")");
-        DISCORD.getChanelByName(args[0]).sendMessage(eb.build()).queue();
+        String LoreId = DISCORD.getMentionLoreId();
+        if(LoreId!=null) DISCORD.getChanelByName(args[0]).sendMessage("<@&"+ LoreId+">").queue();
+
+        DISCORD.getChanelByName(args[0]).sendMessageEmbeds(eb.build()).queue();
+
+
         return true;
     }
 
