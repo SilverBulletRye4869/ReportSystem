@@ -15,6 +15,7 @@ public class Discord {
     private final JavaPlugin plugin;
     private final HashMap<String,TextChannel> channelData = new HashMap<>();
     private JDA jda;
+    private String mentionLoreId = null;
 
     public Discord(JavaPlugin plugin){
         this.plugin = plugin;
@@ -38,7 +39,6 @@ public class Discord {
             plugin.getServer().getPluginManager().disablePlugin(plugin);
             return null;
         }
-
         return jda;
     }
 
@@ -54,6 +54,17 @@ public class Discord {
         String id = config.getString("channel_"+type);
         if(id==null)return false;
         channelData.put(type,jda.getTextChannelById(id));
+        return true;
+    }
+
+    public String getMentionLoreId(){
+        if(mentionLoreId==null)reloadMentionLoreId();
+        return mentionLoreId;
+    }
+    public boolean reloadMentionLoreId(){
+        FileConfiguration config = plugin.getConfig();
+        if(config.get("mentionLoreId")==null)return false;
+        this.mentionLoreId = config.getString("mentionLoreId");
         return true;
     }
 }
